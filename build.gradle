@@ -28,7 +28,7 @@ sourceSets.all { set ->
     }
 
     def sourcesJarTask = task("${set.name}SourcesJar", type: Jar) {
-        baseName = "$set.name-"
+        baseName = "$set.name"
 		classifier = 'sources'
         from set.allSource
     }
@@ -75,8 +75,8 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 //}
 
 artifacts {
-	archives sourcesJar
-	archives javadocJar
+	//archives sourcesJar
+	//archives javadocJar
 	//archives abstractTestSourcesJar
 }
 
