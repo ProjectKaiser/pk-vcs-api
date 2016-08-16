@@ -28,7 +28,7 @@ sourceSets.all { set ->
     }
 
     def sourcesJarTask = task("${set.name}SourcesJar", type: Jar) {
-        baseName = "$set.name-sources"
+        baseName = "$set.name-"
 		classifier = 'sources'
         from set.allSource
     }
@@ -83,6 +83,6 @@ artifacts {
 install {
     repositories.mavenInstaller {
 		addFilter('abstractTest') { artifact, file -> artifact.name.endsWith('abstractTest') }
-		//addFilter('api') { artifact, file -> artifact.name.endsWith('main') }
+		addFilter('api') { artifact, file -> artifact.name.endsWith('main') }
     }
 }
