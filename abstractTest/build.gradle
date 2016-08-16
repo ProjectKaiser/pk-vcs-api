@@ -12,6 +12,19 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets.all { set ->
+    def jarTask = task("${set.name}Jar", type: Jar) {
+        baseName = "$set.name"
+        from set.output
+    }
+
+	println(jarTask)
+
+    artifacts {
+        archives jarTask
+    }
+}
+
 dependencies {
     compile 'junit:junit:4.12'
     compile 'org.mockito:mockito-core:2.0.62-beta'
