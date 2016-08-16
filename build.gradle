@@ -13,25 +13,13 @@ repositories {
 }
 
 sourceSets {
-	abstractTest 
-	api {
+	abstractTest {
 		java {
-			srcDir 'src/main/java/com/projectkaiser/scm/vcs/api'
-		}
+			srcDir 'abstractTest/src/java/com/projectkaiser/scm/vcs/api/abstracttest'
+	
+	    }
 	}
 }
-
-sourceSets.all { set ->
-    def jarTask = task("${set.name}Jar", type: Jar) {
-        baseName = "$set.name"
-        from set.output
-    }
-    
-    artifacts {
-        archives jarTask
-    }
-}
-
 
 dependencies {
     testCompile 'junit:junit:4.12'
@@ -40,16 +28,9 @@ dependencies {
     compile 'commons-logging:commons-logging:1.2'
     compile 'commons-io:commons-io:2.4'
     
-    apiCompile 'commons-logging:commons-logging:1.2'
-    apiCompile 'commons-io:commons-io:2.4'
-    
     abstractTestCompile 'junit:junit:4.12'
     abstractTestCompile 'org.mockito:mockito-core:2.0.62-beta'
-    abstractTestCompile sourceSets.api.output
-    abstractTestCompile 'commons-io:commons-io:2.4'
-    
-    runtime configurations.apiRuntime
-    runtime configurations.abstractTestRuntime
+    abstractTestCompile rootProject
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -62,15 +43,20 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
+task abstractTestJar(type: Jar, dependsOn: testClasses) {
+	classifier = 'abstractTest'
+	from sourceSets.abstractTest.output
+}
+
 artifacts {
 	archives sourcesJar
 	archives javadocJar
-	//archives abstractTestJar
+	archives abstractTestJar
 }
 
-install {
-    repositories.mavenInstaller {
-		addFilter('abstractTest') { artifact, file -> artifact.name.endsWith('abstractTest') }
-		addFilter('api') { artifact, file -> artifact.name.endsWith('main') }
-    }
-}
+//install {
+//    repositories.mavenInstaller {
+//		addFilter('abstractTest') { artifact, file -> artifact.name.endsWith('abstractTest') }
+//		addFilter('api') { artifact, file -> artifact.name.endsWith('main') }
+//    }
+//}
