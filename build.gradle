@@ -62,10 +62,15 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
+task abstractTestSourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'abstractTestSources'
+	from sourceSets.abstractTest.allSource
+}
+
 artifacts {
 	archives sourcesJar
 	archives javadocJar
-	//archives abstractTestJar
+	archives abstractTestSourcesJar
 }
 
 install {
