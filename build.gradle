@@ -1,6 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'maven-publish'
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
@@ -28,8 +27,8 @@ sourceSets.all { set ->
         from set.output
     }
 
-    def sourcesJarTask = task("${set.name}-sources", type: Jar) {
-        baseName = "$set.name"
+    def sourcesJarTask = task("${set.name}SourcesJar", type: Jar) {
+        baseName = "$set.name-sources"
 		classifier = 'sources'
         from set.allSource
     }
