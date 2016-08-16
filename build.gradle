@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
@@ -26,9 +27,16 @@ sourceSets.all { set ->
         baseName = "$set.name"
         from set.output
     }
+
+    def sourcesJarTask = task("${set.name}-sources", type: Jar) {
+        baseName = "$set.name"
+		classifier = 'sources'
+        from set.allSource
+    }
     
     artifacts {
         archives jarTask
+	    archives sourcesJarTask
     }
 }
 
@@ -62,20 +70,20 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-task abstractTestSourcesJar(type: Jar, dependsOn: classes) {
-	classifier = 'abstractTestSources'
-	from sourceSets.abstractTest.allSource
-}
+//task abstractTestSourcesJar(type: Jar, dependsOn: classes) {
+//	classifier = 'abstractTestSources'
+//	from sourceSets.abstractTest.allSource
+//}
 
 artifacts {
-	archives sourcesJar
-	archives javadocJar
-	archives abstractTestSourcesJar
+	//archives sourcesJar
+	//archives javadocJar
+	//archives abstractTestSourcesJar
 }
 
 install {
     repositories.mavenInstaller {
 		addFilter('abstractTest') { artifact, file -> artifact.name.endsWith('abstractTest') }
-		addFilter('api') { artifact, file -> artifact.name.endsWith('main') }
+		//addFilter('api') { artifact, file -> artifact.name.endsWith('main') }
     }
 }
