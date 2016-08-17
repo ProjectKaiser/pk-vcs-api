@@ -7,7 +7,6 @@ targetCompatibility = JavaVersion.VERSION_1_7
 group = 'com.projectkaiser.scm'
 version = '1.0-SNAPSHOT'
 
-
 repositories {
 	mavenCentral()
 }
@@ -35,6 +34,7 @@ task abstractTestJavadocTask(type: Javadoc) {
 
 task abstractTestJar(type: Jar) {
 	baseName = sourceSets.abstractTest.name
+	classifier = 'abstractTest'
 	from sourceSets.abstractTest.output
 }
 
@@ -44,6 +44,7 @@ task abstractTestSourcesJar(type: Jar) {
 	from sourceSets.abstractTest.allSource
 }
 
+
 task abstractTestJavadocJar(type: Jar, dependsOn: abstractTestJavadocTask) {
 	baseName = sourceSets.abstractTest.name
 	classifier = 'javadoc'
@@ -52,6 +53,7 @@ task abstractTestJavadocJar(type: Jar, dependsOn: abstractTestJavadocTask) {
 
 task apiJar(type: Jar) {
 	baseName = sourceSets.api.name
+	classifier = 'api'
 	from sourceSets.api.output
 }
 
@@ -67,6 +69,7 @@ task apiJavadocJar(type: Jar, dependsOn: apiJavadocTask) {
     from apiJavadocTask.destinationDir
 }
 
+
 artifacts {
 	archives apiJar
 	archives apiSourcesJar
@@ -74,7 +77,9 @@ artifacts {
 	archives abstractTestJar
 	archives abstractTestSourcesJar
 	archives abstractTestJavadocJar
-}	
+}
+
+println(artifacts)	
 
 dependencies {
     testCompile 'junit:junit:4.12'
@@ -90,7 +95,11 @@ dependencies {
     abstractTestCompile 'org.mockito:mockito-core:2.0.62-beta'
     abstractTestCompile sourceSets.api.output
     abstractTestCompile 'commons-io:commons-io:2.4'
+    
+    runtime configurations.apiRuntime
+    runtime configurations.abstractTestRuntime
 }
+
 
 install {
     repositories.mavenInstaller {
