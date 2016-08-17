@@ -7,6 +7,7 @@ targetCompatibility = JavaVersion.VERSION_1_7
 group = 'com.projectkaiser.scm'
 version = '1.0-SNAPSHOT'
 
+
 repositories {
 	mavenCentral()
 }
@@ -20,66 +21,24 @@ sourceSets {
 	}
 }
 
-task apiJavadocTask(type: Javadoc) {
-	source = sourceSets.api.allJava
-	destinationDir = file("${buildDir}/docs/api")
-	classpath = sourceSets.api.compileClasspath
+sourceSets.all { set ->
+    def jarTask = task("${set.name}Jar", type: Jar) {
+        baseName = "$set.name"
+        from set.output
+    }
+
+    def sourcesJarTask = task("${set.name}SourcesJar", type: Jar) {
+        baseName = "$set.name"
+		classifier = 'sources'
+        from set.allSource
+    }
+    
+    artifacts {
+        archives jarTask
+	    archives sourcesJarTask
+    }
 }
 
-task abstractTestJavadocTask(type: Javadoc) {
-    source = sourceSets.abstractTest.allJava
-    classpath = sourceSets.abstractTest.compileClasspath
-    destinationDir = file("${buildDir}/docs/abstractTest")
-}
-
-task abstractTestJar(type: Jar) {
-	baseName = sourceSets.abstractTest.name
-	classifier = 'abstractTest'
-	from sourceSets.abstractTest.output
-}
-
-task abstractTestSourcesJar(type: Jar) {
-	baseName = sourceSets.abstractTest.name
-	classifier = 'sources'
-	from sourceSets.abstractTest.allSource
-}
-
-
-task abstractTestJavadocJar(type: Jar, dependsOn: abstractTestJavadocTask) {
-	baseName = sourceSets.abstractTest.name
-	classifier = 'javadoc'
-    from abstractTestJavadocTask.destinationDir
-}
-
-task apiJar(type: Jar) {
-	baseName = sourceSets.api.name
-	classifier = 'api'
-	from sourceSets.api.output
-}
-
-task apiSourcesJar(type: Jar) {
-	baseName = sourceSets.api.name
-	classifier = 'sources'
-	from sourceSets.api.allSource
-}
-
-task apiJavadocJar(type: Jar, dependsOn: apiJavadocTask) {
-	baseName = sourceSets.api.name
-	classifier = 'javadoc'
-    from apiJavadocTask.destinationDir
-}
-
-
-artifacts {
-	archives apiJar
-	archives apiSourcesJar
-	archives apiJavadocJar
-	archives abstractTestJar
-	archives abstractTestSourcesJar
-	archives abstractTestJavadocJar
-}
-
-println(artifacts)	
 
 dependencies {
     testCompile 'junit:junit:4.12'
@@ -100,10 +59,30 @@ dependencies {
     runtime configurations.abstractTestRuntime
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+	
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+//task abstractTestSourcesJar(type: Jar, dependsOn: classes) {
+//	classifier = 'abstractTestSources'
+//	from sourceSets.abstractTest.allSource
+//}
+
+artifacts {
+	archives sourcesJar
+	archives javadocJar
+	//archives abstractTestSourcesJar
+}
 
 install {
     repositories.mavenInstaller {
 		addFilter('abstractTest') { artifact, file -> artifact.name.endsWith('abstractTest') }
-		addFilter('api') { artifact, file -> artifact.name.endsWith('api') }
+		addFilter('api') { artifact, file -> artifact.name.endsWith('main') }
     }
 }
