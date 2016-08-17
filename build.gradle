@@ -40,6 +40,8 @@ sourceSets.all { set ->
 }
 
 
+
+
 dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.0.62-beta'
@@ -75,8 +77,8 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 //}
 
 artifacts {
-	archives sourcesJar
-	archives javadocJar
+	//archives sourcesJar
+	//archives javadocJar
 	//archives abstractTestSourcesJar
 }
 
