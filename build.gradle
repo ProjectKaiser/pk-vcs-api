@@ -104,6 +104,6 @@ dependencies {
 install {
     repositories.mavenInstaller {
 		addFilter('abstractTest') { artifact, file -> artifact.name.endsWith('abstractTest') }
-		addFilter('api') { artifact, file -> artifact.name.endsWith('main') }
+		addFilter('main') { artifact, file -> artifact.name.endsWith('api') }
     }
 }
